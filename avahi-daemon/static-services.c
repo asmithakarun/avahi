@@ -48,6 +48,7 @@
 
 #include "main.h"
 #include "static-services.h"
+#include "service_text_plugin.c"
 
 typedef struct StaticService StaticService;
 typedef struct StaticServiceGroup StaticServiceGroup;
@@ -252,6 +253,10 @@ static void add_static_service_group_to_server(StaticServiceGroup *g) {
 
     for (s = g->services; s; s = s->services_next) {
         AvahiStringList *i;
+
+        avahi_log_info("Service name : %s\n", g->chosen_name);
+        get_service_specific_data(g->chosen_name);
+        s->txt_records = avahi_string_list_add(s->txt_records, text_data);
 
         if (avahi_server_add_service_strlst(
                 avahi_server,
